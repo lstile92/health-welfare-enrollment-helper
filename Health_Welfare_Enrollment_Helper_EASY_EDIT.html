@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health & Welfare Enrollment Helper</title>
+
+<!-- =========================================================
+     EMPLOYEE HEALTH & WELFARE HELPER
+
+     ⭐ YOU ONLY NEED TO EDIT THE SECTION CALLED
+        "EASY EDIT SECTION" BELOW.
+
+     Do NOT change anything else unless you know HTML/CSS.
+     ========================================================= -->
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#eef5f8;color:#243746;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:24px}
+.app{width:100%;max-width:760px;background:white;border-radius:22px;box-shadow:0 12px 35px rgba(30,60,80,.14);overflow:hidden}
+.header{background:#dceef7;padding:28px 30px 24px;text-align:center}
+.icon{font-size:42px}h1{margin:0;font-size:28px;color:#1d526d}.subtitle{margin:8px 0 0;font-size:15px;color:#527080}
+.content{padding:30px}.step{font-size:12px;font-weight:700;letter-spacing:.08em;color:#66808d;text-transform:uppercase;margin-bottom:8px}
+h2{margin:0 0 22px;font-size:24px;color:#294c5d}.choices{display:grid;gap:14px}
+button.choice{border:2px solid #c8dce5;background:#fff;border-radius:15px;padding:18px 20px;font-size:17px;font-weight:600;color:#294c5d;cursor:pointer;text-align:left}
+button.choice:hover{border-color:#6da9c2;background:#f4fafc}
+.emoji{font-size:26px;margin-right:10px;vertical-align:middle}
+.result{background:#f5fafc;border:1px solid #cfe1e8;border-radius:16px;padding:20px}
+.result h3{margin:0 0 14px;font-size:21px;color:#1e607d}.result ul{list-style:none;padding:0;margin:0}
+.result li{background:white;border-radius:10px;padding:11px 13px;margin:8px 0;border:1px solid #e0eaee}
+.result li:before{content:"☐ ";font-weight:bold}
+.note{margin-top:16px;padding:13px 15px;background:#fff8e7;border-left:4px solid #e5b84d;border-radius:8px;font-size:14px}
+.success{text-align:center;background:#edf8f0;border:1px solid #c9e6d0;border-radius:16px;padding:22px}
+.big{font-size:40px}.success h3{margin:8px 0;color:#27623b;font-size:23px}.success p{margin:0;color:#52705b}
+.footer{padding:18px 30px 25px;text-align:center;border-top:1px solid #edf1f3}
+.restart{border:none;background:#5d8fa5;color:white;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer}
+.progress{height:5px;background:#e7eef1}.progress-bar{height:100%;background:#6da9c2;width:0%;transition:width .2s}
+@media(max-width:600px){body{padding:10px}.content{padding:22px}.header{padding:24px 20px}h1{font-size:24px}h2{font-size:21px}}
+</style>
+</head>
+
+<body>
+<div class="app">
+<div class="header">
+  <div class="icon">🩺</div>
+  <h1 id="title"></h1>
+  <div class="subtitle" id="subtitle"></div>
+</div>
+
+<div class="progress"><div class="progress-bar" id="progress"></div></div>
+<div class="content" id="content"></div>
+
+<div class="footer">
+  <button class="restart" onclick="startOver()">↻ Start Over</button>
+</div>
+</div>
+
+<script>
+
+/* =========================================================
+   ⭐⭐⭐ EASY EDIT SECTION ⭐⭐⭐
+
+   THIS IS THE ONLY SECTION YOU SHOULD NEED TO EDIT.
+
+   You can change the wording, add/remove forms, and change
+   the notes employees see.
+   ========================================================= */
+
+const SETTINGS = {
+
+  // The title employees see at the top
+  title: "Health & Welfare Enrollment Helper",
+
+  // The sentence underneath the title
+  subtitle: "Answer a few simple questions to find out which forms you need.",
+
+  // -------------------------------------------------------
+  // NEW EMPLOYEES
+  // -------------------------------------------------------
+
+  newEmployee: {
+    question: "Do you want health insurance?",
+
+    electInsurance: {
+      button: "Yes, I want health insurance",
+      title: "🆕 New Employee — Electing Health Insurance",
+
+      forms: [
+        "Health & Welfare Enrollment Form",
+        "Enrollment Form for the health plan you choose (Kaiser or another available plan)",
+        "Previous Fiscal Year Acknowledgment — for September",
+        "Current Fiscal Year Acknowledgment — for October and after"
+      ],
+
+      note: ""
+    },
+
+    waiveInsurance: {
+      button: "No, I want to waive health insurance",
+      title: "🆕 New Employee — Waiving Health Insurance",
+
+      forms: [
+        "WABE Form",
+        "SISC Enrollment Form",
+        "Acknowledgment Form"
+      ],
+
+      note: "You do NOT need to complete the Health & Welfare Enrollment Form."
+    }
+  },
+
+  // -------------------------------------------------------
+  // RETURNING EMPLOYEES
+  // -------------------------------------------------------
+
+  returningEmployee: {
+    question: "What are you doing this year?",
+
+    samePlan: {
+      button: "Keeping my same plan",
+      title: "🔄 Returning Employee — Same Plan",
+
+      forms: [
+        "Health & Welfare Enrollment Form",
+        "Current Fiscal Year Acknowledgment"
+      ],
+
+      note: "You do NOT need a new specific-plan enrollment form."
+    },
+
+    changingPlan: {
+      button: "Changing to a different plan",
+      title: "🔄 Returning Employee — Changing Plans",
+
+      forms: [
+        "Health & Welfare Enrollment Form",
+        "Enrollment Form for your NEW health plan",
+        "Current Fiscal Year Acknowledgment"
+      ],
+
+      note: ""
+    },
+
+    waiveInsurance: {
+      button: "I want to waive health insurance",
+      title: "🔄 Returning Employee — Waiving Health Insurance",
+
+      forms: [
+        "WABE Form",
+        "Acknowledgment Form"
+      ],
+
+      note: "You do NOT need to complete the Health & Welfare Enrollment Form."
+    }
+  }
+
+};
+
+
+/* =========================================================
+   ⭐ DO NOT EDIT BELOW THIS LINE
+   ========================================================= */
+
+const content=document.getElementById("content");
+const progress=document.getElementById("progress");
+
+document.getElementById("title").textContent=SETTINGS.title;
+document.getElementById("subtitle").textContent=SETTINGS.subtitle;
+
+function bar(n){progress.style.width=n+"%"}
+
+function startOver(){
+  bar(20);
+  content.innerHTML=
+  '<div class="step">Question 1</div>'+
+  '<h2>What describes you?</h2>'+
+  '<div class="choices">'+
+  '<button class="choice" onclick="newEmployee()"><span class="emoji">🆕</span>I am a <b>NEW employee</b></button>'+
+  '<button class="choice" onclick="returningEmployee()"><span class="emoji">🔄</span>I am a <b>RETURNING employee</b></button>'+
+  '</div>';
+}
+
+function newEmployee(){
+  const x=SETTINGS.newEmployee;
+  bar(50);
+  content.innerHTML=
+  '<div class="step">Question 2</div>'+
+  '<h2>'+x.question+'</h2>'+
+  '<div class="choices">'+
+  '<button class="choice" onclick="newYes()"><span class="emoji">✅</span>'+x.electInsurance.button+'</button>'+
+  '<button class="choice" onclick="newNo()"><span class="emoji">❌</span>'+x.waiveInsurance.button+'</button>'+
+  '</div>';
+}
+
+function returningEmployee(){
+  const x=SETTINGS.returningEmployee;
+  bar(50);
+  content.innerHTML=
+  '<div class="step">Question 2</div>'+
+  '<h2>'+x.question+'</h2>'+
+  '<div class="choices">'+
+  '<button class="choice" onclick="samePlan()"><span class="emoji">👍</span>'+x.samePlan.button+'</button>'+
+  '<button class="choice" onclick="changePlan()"><span class="emoji">🔄</span>'+x.changingPlan.button+'</button>'+
+  '<button class="choice" onclick="returningNo()"><span class="emoji">❌</span>'+x.waiveInsurance.button+'</button>'+
+  '</div>';
+}
+
+function showResult(data){
+  bar(100);
+
+  let forms="";
+  data.forms.forEach(function(form){
+    forms += "<li>"+form+"</li>";
+  });
+
+  let note=data.note ? '<div class="note">💡 '+data.note+'</div>' : '';
+
+  content.innerHTML=
+  '<div class="success">'+
+  '<div class="big">🎉</div>'+
+  '<h3>You are almost done!</h3>'+
+  '<p>Based on your answers, please complete the forms below.</p>'+
+  '</div><br>'+
+  '<div class="result">'+
+  '<h3>'+data.title+'</h3>'+
+  '<ul>'+forms+'</ul>'+
+  note+
+  '</div>';
+}
+
+function newYes(){showResult(SETTINGS.newEmployee.electInsurance)}
+function newNo(){showResult(SETTINGS.newEmployee.waiveInsurance)}
+function samePlan(){showResult(SETTINGS.returningEmployee.samePlan)}
+function changePlan(){showResult(SETTINGS.returningEmployee.changingPlan)}
+function returningNo(){showResult(SETTINGS.returningEmployee.waiveInsurance)}
+
+startOver();
+
+</script>
+</body>
+</html>
