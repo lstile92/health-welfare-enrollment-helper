@@ -77,22 +77,6 @@ const SETTINGS = {
   subtitle: "Answer a few simple questions to find out which forms you need.",
 
   // -------------------------------------------------------
-  // DISTRICTS/CHARTERS
-  // -------------------------------------------------------
-
-  districts: [
-    "Ace",
-    "Briggs",
-    "MATES",
-    "Mesa",
-    "Mupu",
-    "River Oaks Academy",
-    "Santa Clara",
-    "Somis",
-    "Ventura Charter"
-  ],
-
-  // -------------------------------------------------------
   // NEW EMPLOYEES
   // -------------------------------------------------------
 
@@ -188,25 +172,9 @@ document.getElementById("subtitle").textContent=SETTINGS.subtitle;
 function bar(n){progress.style.width=n+"%"}
 
 function startOver(){
-  bar(10);
-  let districtButtons = "";
-  SETTINGS.districts.forEach(function(district){
-    districtButtons += '<button class="choice" onclick="selectDistrict(\''+district+'\')"><span class="emoji">🏫</span>'+district+'</button>';
-  });
-  
+  bar(20);
   content.innerHTML=
   '<div class="step">Question 1</div>'+
-  '<h2>Select your District/Charter</h2>'+
-  '<div class="choices">'+
-  districtButtons+
-  '</div>';
-}
-
-function selectDistrict(district){
-  window.selectedDistrict = district;
-  bar(25);
-  content.innerHTML=
-  '<div class="step">Question 2</div>'+
   '<h2>What describes you?</h2>'+
   '<div class="choices">'+
   '<button class="choice" onclick="newEmployee()"><span class="emoji">🆕</span>I am a <b>NEW employee</b></button>'+
@@ -218,7 +186,7 @@ function newEmployee(){
   const x=SETTINGS.newEmployee;
   bar(50);
   content.innerHTML=
-  '<div class="step">Question 3</div>'+
+  '<div class="step">Question 2</div>'+
   '<h2>'+x.question+'</h2>'+
   '<div class="choices">'+
   '<button class="choice" onclick="newYes()"><span class="emoji">✅</span>'+x.electInsurance.button+'</button>'+
@@ -230,7 +198,7 @@ function returningEmployee(){
   const x=SETTINGS.returningEmployee;
   bar(50);
   content.innerHTML=
-  '<div class="step">Question 3</div>'+
+  '<div class="step">Question 2</div>'+
   '<h2>'+x.question+'</h2>'+
   '<div class="choices">'+
   '<button class="choice" onclick="samePlan()"><span class="emoji">👍</span>'+x.samePlan.button+'</button>'+
@@ -263,7 +231,6 @@ function showResult(data){
   '</div><br>'+
   '<div class="result">'+
   '<h3>'+data.title+'</h3>'+
-  '<p><strong>District/Charter:</strong> '+window.selectedDistrict+'</p>'+
   '<ul>'+forms+'</ul>'+
   note+
   '</div>';
