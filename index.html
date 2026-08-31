@@ -29,6 +29,8 @@ button.choice:hover{border-color:#6da9c2;background:#f4fafc}
 .result h3{margin:0 0 14px;font-size:21px;color:#1e607d}.result ul{list-style:none;padding:0;margin:0}
 .result li{background:white;border-radius:10px;padding:11px 13px;margin:8px 0;border:1px solid #e0eaee}
 .result li:before{content:"☐ ";font-weight:bold}
+.result a{color:#2980b9;text-decoration:none;font-weight:600}
+.result a:hover{text-decoration:underline}
 .note{margin-top:16px;padding:13px 15px;background:#fff8e7;border-left:4px solid #e5b84d;border-radius:8px;font-size:14px}
 .success{text-align:center;background:#edf8f0;border:1px solid #c9e6d0;border-radius:16px;padding:22px}
 .big{font-size:40px}.success h3{margin:8px 0;color:#27623b;font-size:23px}.success p{margin:0;color:#52705b}
@@ -86,10 +88,10 @@ const SETTINGS = {
       title: "🆕 New Employee — Electing Health Insurance",
 
       forms: [
-        "Health & Welfare Enrollment Form",
-        "Enrollment Form for the health plan you choose (Kaiser or another available plan)",
-        "Previous Fiscal Year Acknowledgment — for September",
-        "Current Fiscal Year Acknowledgment — for October and after"
+        { text: "Anthem Enrollment Form", url: "https://vcsbsa.org/wp-content/uploads/2020/10/FT_20191001_ALL_SISC-HMO-PPO-Enrollment-Form.pdf" },
+        { text: "Kaiser Enrollment Form", url: "https://vcsbsa.org/wp-content/uploads/2020/10/FT_20191001_ALL_Kaiser-Enrollment-Form.pdf" },
+        { text: "Health and Benefit Acknowledgement 25-26", url: "https://vcsbsa.org/wp-content/uploads/2026/06/Health-Benefit-Guidelines-Ack-25-26.pdf" },
+        { text: "Health and Benefit Acknowledgement 26-27", url: "https://vcsbsa.org/wp-content/uploads/2026/06/Health-Benefit-Guidelines-Ack-26-27.pdf" }
       ],
 
       note: ""
@@ -210,7 +212,13 @@ function showResult(data){
 
   let forms="";
   data.forms.forEach(function(form){
-    forms += "<li>"+form+"</li>";
+    if(typeof form === 'object' && form.url){
+      forms += '<li><a href="'+form.url+'" target="_blank">'+form.text+'</a></li>';
+    } else if(typeof form === 'object'){
+      forms += "<li>"+form.text+"</li>";
+    } else {
+      forms += "<li>"+form+"</li>";
+    }
   });
 
   let note=data.note ? '<div class="note">💡 '+data.note+'</div>' : '';
